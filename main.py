@@ -44,6 +44,9 @@ for i in range(sequence.shape[0]):
 
 #Training Recurrent Neural Network
 
+    # feed to the RNN 256 sequences of the same image
+    # 1 of the 256 will have the correct prediction, returning the value 1 for the correct and 0 for the others
+
 model_rnn = models.Sequential()
 model_rnn.add(layers.LSTM(64, input_shape=(15000, 10)))    #15000 sequences and (example) 10 steps per sequence
 model_rnn.add(layers.Dropout(0.2))
@@ -56,3 +59,8 @@ model_rnn.summary()
 
 
 #Predicting with Recurrent Neural Network
+
+    # generate a starting sequence
+    # create 256 sequences by adding a different position in the end of the starting sequence
+    # feed the sequences to the RNN and chose 20 with the higher probabilities (output)
+    # repeat and stop when the desired size is achieved
