@@ -72,14 +72,14 @@ test_sequence = np.zeros((16*16, 20, 512))
 
 position = np.zeros((16*16, 20))
 
-starting_sequence = np.random.randint(0, 256, 19)
+starting_sequence = np.random.randint(256, size=19)
 
-for i in range(sequence.shape[0]):
-    for j in range(starting_sequence.shape[1]):
-        test_sequence[i, j] = test_features[i, int(starting_sequence[i, j]/16), starting_sequence[i,j]%16, :]
-        position[i, j] = starting_sequence[i, j]
+for i in range(test_sequence.shape[0]):
+    for j in range(starting_sequence.shape[0]):
+        test_sequence[i, j] = test_features[0, int(starting_sequence[j]/16), starting_sequence[j]%16, :]
+        position[i, j] = starting_sequence[j]
 
-    test_sequence[i, -1] = test_features[i, int(j/16), j%16, :]
+    test_sequence[i, -1] = test_features[0, int(i/16), i%16, :]
     position[i, -1] = i
 
 prediction = model_rnn.predict(test_sequence)
