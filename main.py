@@ -31,10 +31,10 @@ x_test.shape
 x_train = x_train.astype('float32')/255.0
 x_test = x_test.astype('float32')/255.0
 
-features = model_cnn.predict(x_test[:1, : , : , :])
+features = model_cnn.predict(x_test[:, : , : , :])
 features.shape
 
-sequence = np.zeros((1, 10, 512))  #15000 sequences and 10 steps per sequence and 512 features
+sequence = np.zeros((x_test.shape[0], 10, 512))  #15000 sequences and 10 steps per sequence and 512 features
 sequence.shape
 
 for i in range(sequence.shape[0]):
@@ -48,14 +48,14 @@ for i in range(sequence.shape[0]):
     # 1 of the 256 will have the correct prediction, returning the value 1 for the correct and 0 for the others
 
 model_rnn = models.Sequential()
-model_rnn.add(layers.LSTM(64, input_shape=(15000, 10)))    #15000 sequences and (example) 10 steps per sequence
+model_rnn.add(layers.LSTM(64, input_shape=(10, 512)))    #15000 sequences and (example) 10 steps per sequence
 model_rnn.add(layers.Dropout(0.2))
 model_rnn.add(layers.Dense(1, activation='sigmoid'))
 model_rnn.compile(loss='mean_squared_error', optimizer='rmsprop')
 
 model_rnn.summary()
 
-#model.fit(input, output, epochs=10, batch_size=64)
+model_rnn.fit(sequence, np.ones(sequence.shape[0]), epochs=10, batch_size=64)
 
 
 #Predicting with Recurrent Neural Network
