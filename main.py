@@ -2,6 +2,8 @@ from keras import layers
 from keras import models
 from keras.datasets import cifar10
 import numpy as np
+import auxfunctions
+
 
 
 #Convolutional Neural Network
@@ -89,3 +91,10 @@ print (prediction)
 index = np.argmax(prediction)
 
 print ("index=", index, "probability=", prediction[index], "sequence=", position[index])
+
+#Representacao grafica das probabilidades
+
+#para testar apenas o grafico criar prediction random comentar tudo para cima e descomentar a seguinte linha:
+# prediction=np.random.rand(256,1)
+
+auxfunctions.probGraph(prediction)
