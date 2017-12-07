@@ -7,3 +7,8 @@ from keras.applications.vgg16 import preprocess_input
 
 
 model = VGG16(weights='imagenet', include_top=False)
+
+
+x = preprocess_input(x)
+
+features = model.predict(x)
