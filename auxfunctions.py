@@ -2,6 +2,7 @@ import matplotlib
 matplotlib.use('TkAgg')
 from matplotlib import pyplot
 from matplotlib import colors
+import numpy as np
 
 
 def probGraph(prediction):
@@ -21,3 +22,8 @@ def probGraph(prediction):
     pyplot.colorbar(img, cmap=cmap)
 
     pyplot.show()
+
+
+
+prediction=np.random.rand(256,1)
+probGraph(prediction)
