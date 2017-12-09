@@ -1,14 +1,7 @@
 import numpy as np
-from keras import layers
-from keras import models
-from keras.datasets import cifar10
-from keras.applications.vgg16 import VGG16
-from keras.applications.vgg16 import preprocess_input
+import cnn
+import data
 
+(x_train, y_train) = data.get_train()
 
-model = VGG16(weights='imagenet', include_top=False)
-
-
-x = preprocess_input(x)
-
-features = model.predict(x)
+(x_train_p, _, features) = cnn.get_features (x_train)    # gets preprocessed data and corresponding features (output of cnn)
