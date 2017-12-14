@@ -18,7 +18,7 @@ def create():
 
 def fit(model_rnn, x, y):
 
-    model_rnn.fit(x, y), epochs=20, batch_size=64)
+    model_rnn.fit(x, y, epochs=20, batch_size=64)
 
     filepath = 'weights.h5'
 
