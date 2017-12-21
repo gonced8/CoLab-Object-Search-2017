@@ -57,7 +57,7 @@ def get_saliency(x, y)
     #print(x_test.shape)
 
     x.shape
-    grads = visualize_saliency(model, layer_idx, None, seed_input=x[4:5, :, :, :], backprop_modifier='guided')
+    grads = visualize_saliency(model, layer_idx, None, seed_input=x[idx:idx+1, :, :, :], backprop_modifier='guided')
 
     print('d')
     # Plot with 'jet' colormap to visualize as a heatmap.
