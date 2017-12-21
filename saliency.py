@@ -2,6 +2,8 @@ import numpy as np
 import skimage.transform
 from keras.applications import VGG16
 from keras.applications.vgg16 import preprocess_input
+import matplotlib
+matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
 from vis.visualization import visualize_saliency
 from vis.utils import utils
@@ -34,10 +36,8 @@ def get_saliency(x, y):
 
     plt.figure(1)
     plt.rcParams['figure.figsize'] = (18, 6)
-
     plt.imshow(x[idx]/255.)
-
-    plt.figure(1)
+    plt.show()
 
     print('a')
 
@@ -68,4 +68,4 @@ def get_saliency(x, y):
     # Plot with 'jet' colormap to visualize as a heatmap.
     plt.figure(2)
     plt.imshow(grads, cmap='jet')
-    plt.figure(2)
+    plt.show()
