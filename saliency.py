@@ -1,12 +1,13 @@
 import numpy as np
 import skimage.transform
 from keras.applications import VGG16
+from keras.applications.vgg16 import preprocess_input
 from matplotlib import pyplot as plt
 from vis.visualization import visualize_saliency
 from vis.utils import utils
 from keras import activations
-
 import data
+
 
 def get_saliency(x, y):
 
@@ -16,7 +17,6 @@ def get_saliency(x, y):
     msize=224
 
     (x, _) = data.get_train_dogs_vs_cats(0, 5) # gets the train data (only cats) from dataset dogs vs cats
-
 
     if x.shape[1]!=msize or x.shape[2]!=msize:
         x_resized = np.zeros((x.shape[0], msize, msize, x.shape[3]))
@@ -28,14 +28,16 @@ def get_saliency(x, y):
 
     x.shape
     # pick some random input from here.
-    idx = 3
+    idx = 2
 
     # Lets sanity check the picked image.
 
     plt.figure(1)
     plt.rcParams['figure.figsize'] = (18, 6)
 
-    plt.imshow(x[idx][...])
+    plt.imshow(x[idx]/255.)
+
+    plt.figure(1)
 
     print('a')
 
@@ -57,9 +59,13 @@ def get_saliency(x, y):
     #print(x_test.shape)
 
     x.shape
-    grads = visualize_saliency(model, layer_idx, None, seed_input=x[idx:idx+1, :, :, :], backprop_modifier='guided')
+    x_pp = preprocess_input(x)
+    grads = visualize_saliency(model, layer_idx, None, seed_input=x_pp[idx:idx+1, :, :, :], backprop_modifier='guided')
 
+    grads.shape
+    grads[0, :, 2]
     print('d')
     # Plot with 'jet' colormap to visualize as a heatmap.
     plt.figure(2)
     plt.imshow(grads, cmap='jet')
+    plt.figure(2)
