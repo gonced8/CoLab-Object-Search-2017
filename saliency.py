@@ -28,7 +28,7 @@ def get_saliency(x, y):
 
     x.shape
     # pick some random input from here.
-    idx = 4
+    idx = 3
 
     # Lets sanity check the picked image.
 
