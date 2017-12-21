@@ -37,7 +37,7 @@ def get_saliency(x, y):
     plt.figure(1)
     plt.rcParams['figure.figsize'] = (18, 6)
     plt.imshow(x[idx]/255.)
-    plt.show(block='False')
+    plt.show(block=False)
 
     print('a')
 
@@ -68,4 +68,4 @@ def get_saliency(x, y):
     # Plot with 'jet' colormap to visualize as a heatmap.
     plt.figure(2)
     plt.imshow(grads, cmap='jet')
-    plt.show(block='False')
+    plt.show(block=False)
