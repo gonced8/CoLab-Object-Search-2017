@@ -8,7 +8,7 @@ from keras import activations
 
 import data
 
-def get_saliency(x, y)
+def get_saliency(x, y):
 
     model = VGG16(weights='imagenet', include_top=True)
     model.summary()
