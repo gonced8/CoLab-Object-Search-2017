@@ -69,7 +69,6 @@ def split_sequence (seq, ind, y):
 
                 y_i = np.append(y_i, [y[i][j]], axis=0)
 
-        print(new_y.shape, y_i.shape, count)
         new_seq = np.append(new_seq, [seq_i], axis=0)
         new_ind = np. append(new_ind, [ind_i], axis=0)
         new_y = np.append(new_y, [y_i], axis=0)
