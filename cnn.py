@@ -3,11 +3,13 @@ from keras.applications.vgg16 import preprocess_input
 import skimage.transform
 import numpy as np
 
+
+
 def get_features (x):
 
     model = VGG16(weights='imagenet', include_top=False)
 
-    model.summary()
+    # model.summary()
 
     if x.shape[1]!=512 or x.shape[2]!=512:
         x_resized = np.zeros((x.shape[0], 512, 512, x.shape[3]))
