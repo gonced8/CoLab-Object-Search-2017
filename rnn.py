@@ -3,6 +3,7 @@ from keras import models
 import numpy as np
 
 
+
 def create():
 
     model_rnn = models.Sequential()
@@ -14,6 +15,7 @@ def create():
     model_rnn.summary()
 
     return model_rnn
+
 
 
 def fit(model_rnn, x, y):

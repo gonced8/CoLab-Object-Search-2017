@@ -3,6 +3,8 @@ from keras.datasets import cifar10
 from keras.preprocessing import image
 import os
 
+
+
 def get_train_cifar10():
 
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
@@ -21,6 +23,7 @@ def get_train_cifar10():
             y = np.append(y, [y_train[i]], axis=0)
 
     return (x, y)
+
 
 
 def get_train_dogs_vs_cats(choose=2, number=0):
