@@ -2,8 +2,8 @@ import keras
 import numpy as np
 
 import beam_search
-import data
 import cnn
+import data
 import rnn
 import saliency
 import sequence
