@@ -48,5 +48,5 @@ def ind_to_features(features, ind_seq, empty):
     return [(features[int(i)] if i != empty else np.zeros(features.shape[1])) for i in ind_seq]
 
 
-# beam_search.search(calc_prob, 3, range(256), 3, 0)
+# beam_search.search(calc_prob, 3, range(256), 3)
 # TEST:  model_rnn.predict(np.array([ind_to_features(x_test_features_reshaped, [ 120.,  101.,  121.], float('inf'))]))
