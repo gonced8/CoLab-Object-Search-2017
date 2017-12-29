@@ -6,11 +6,19 @@ def search(calc_prob, seq_max_size, vocab, mem_size):
     vocab_with_empty = np.append(np.array(vocab), empty)
 
     seqs = np.array([[]])
+    seqs_prob = np.array([[]])
 
-    for _ in range(seq_max_size):
+    for current_size in range(1, seq_max_size + 1):
 
-        # TODO split the ones that end in `empty` from the rest
-        children = np.array([np.append(seq, word) for seq in seqs for word in vocab_with_empty])
+        empty_ind = [seq.size > 0 and seq[-1] == empty for seq in seqs]
+
+        seqs_empty = seqs[empty_ind]
+        seqs_not_empty = seqs[np.invert(empty_ind)]
+
+        children_empty = np.array([np.append(seq, empty) for seq in seqs_empty])
+        children_not_empty = np.array([np.append(seq, word) for seq in seqs_not_empty for word in vocab_with_empty])
+
+        children = np.concatenate((children_not_empty, children_empty.reshape(children_empty.shape[0], current_size)))
 
         probs = calc_prob(children, seq_max_size, empty)
 
