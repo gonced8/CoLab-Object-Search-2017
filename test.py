@@ -7,7 +7,7 @@ from keras.applications.vgg16 import preprocess_input
 from keras.preprocessing import image
 
 
-pic = Image.open("1.jpg")
+pic = Image.open("data/dogs vs cats/train/cat.0.jpg")
 
 x = np.array(pic)
 
