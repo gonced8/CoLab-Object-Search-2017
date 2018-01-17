@@ -27,7 +27,7 @@ def get_train_cifar10():
 
 
 
-def get_train_dogs_vs_cats(choose=2, number=-1):
+def get_train_dogs_vs_cats(choose=2, number=-1, last=False):
 
     count=0
 
@@ -48,13 +48,13 @@ def get_train_dogs_vs_cats(choose=2, number=-1):
         else:
             count+=1
 
-        img_path = os.path.join(path, name)
-        img = image.load_img(img_path, target_size=(512, 512))
-        array = image.img_to_array(img)
-        array.shape
-        x = np.append(x, [array], axis=0)
-        y = np.append(y, [[int(name[0:3]=='dog')]], axis=0)
-
+        if not last or count==number-1: 
+            img_path = os.path.join(path, name)
+            img = image.load_img(img_path, target_size=(512, 512))
+            array = image.img_to_array(img)
+            array.shape
+            x = np.append(x, [array], axis=0)
+            y = np.append(y, [[int(name[0:3]=='dog')]], axis=0)
 
     return (x, y)
 
