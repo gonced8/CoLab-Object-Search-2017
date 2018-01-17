@@ -27,15 +27,16 @@ def ind_to_features(features, ind_seq, empty):
 
 count=1
 
-for i in range(count):
+print("Data / Features / Saliency")
+for i in tqdm(range(count)):
 
-    print("Data")
+    #print("Data")
     (x_train, _) = data.get_train_dogs_vs_cats(0, i+1, True)  # gets the train data (only cats) from dataset dogs vs cats
 
-    print("Features")
+    #print("Features")
     (_, _, x_features) = cnn.get_features(x_train)  # gets resized data, preprocessed data and corresponding features (output of CNN)
 
-    print("Saliency")
+    #print("Saliency")
     (_, x_saliency) = saliency.get_saliency(x_train, 16)  # gets saliency map of 16x16
 
     np.savez_compressed("outfile"+str(i), x_train=x_train, x_features=x_features, x_saliency=x_saliency)
