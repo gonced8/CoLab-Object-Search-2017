@@ -2,6 +2,7 @@ from keras.applications.vgg16 import VGG16
 from keras.applications.vgg16 import preprocess_input
 import skimage.transform
 import numpy as np
+from tqdm import tqdm
 
 
 
@@ -14,7 +15,7 @@ def get_features (x):
     if x.shape[1]!=512 or x.shape[2]!=512:
         x_resized = np.zeros((x.shape[0], 512, 512, x.shape[3]))
 
-        for i in range (x.shape[0]):
+        for i in tqdm(range (x.shape[0])):
             x_resized[i, :, :, :] = skimage.transform.resize(x[i, :, :, :], (512, 512), order=1, mode='reflect')
 
         x = x_resized

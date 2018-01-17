@@ -1,4 +1,5 @@
 import numpy as np
+from tqdm import tqdm
 
 
 
@@ -7,7 +8,7 @@ def correct_sequence (features, saliency, n, size):
     seq = np.empty((0, n, size, features.shape[-1]), dtype=features.dtype)
     ind = np.empty((0, n, size), dtype=int)
 
-    for i in range (features.shape[0]):
+    for i in tqdm(range (features.shape[0])):
 
         step = np.empty((0, features.shape[-1]), dtype=features.dtype)
         n_step = np.empty((0))
@@ -48,7 +49,7 @@ def split_sequence (seq, ind, y):
     new_ind = np.empty((0, count, ind.shape[2]), dtype=ind.dtype)
     new_y = np.empty((0, count), dtype=y.dtype)
 
-    for i in range (seq.shape[0]):
+    for i in tqdm(range (seq.shape[0])):
 
         seq_i = np.empty((0, seq.shape[2], seq.shape[3]), dtype=seq.dtype)
         ind_i = np.empty((0, ind.shape[2]), dtype=ind.dtype)
@@ -88,7 +89,7 @@ def wrong_sequence (seq, ind, features, y, n=0):
         new_seq = np.empty((0, n, seq.shape[2], seq.shape[3]), dtype=seq.dtype)
         new_ind = np.empty((0, n, ind.shape[2]), dtype=ind.dtype)
 
-    for i in range (seq.shape[0]):
+    for i in tqdm(range (seq.shape[0])):
 
         i_seq = np.empty((0, seq.shape[2], seq.shape[3]), dtype=seq.dtype)
         i_ind = np.empty((0, ind.shape[2]), dtype=ind.dtype)

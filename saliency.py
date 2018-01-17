@@ -11,6 +11,7 @@ from keras import activations
 import data
 from keras import layers
 from keras import models
+from tqdm import tqdm
 
 
 
@@ -26,7 +27,7 @@ def calculate_saliency(x):
     if x.shape[1]!=msize or x.shape[2]!=msize:
         x_resized = np.zeros((x.shape[0], msize, msize, x.shape[3]))
 
-        for i in range (x.shape[0]):
+        for i in tqdm(range (x.shape[0])):
             x_resized[i, :, :, :] = skimage.transform.resize(x[i, :, :, :], (msize, msize), order=0, mode='reflect')
 
         x = x_resized
@@ -67,7 +68,7 @@ def calculate_saliency(x):
 
     sal = np.empty((0, x_pp.shape[1], x_pp.shape[2], 1), dtype=int)
 
-    for i in range (x_pp.shape[0]):
+    for i in tqdm(range (x_pp.shape[0])):
 
         sal = np.append(sal, [visualize_saliency(model, layer_idx, None, seed_input=x_pp[i], backprop_modifier='guided')[:, :, 2:3]], axis=0)   # only the last rgb channel contains information
 
