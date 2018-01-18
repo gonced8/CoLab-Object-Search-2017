@@ -36,7 +36,8 @@ def get_train_dogs_vs_cats(choose=2, number=-1, last=False):
     x = np.empty((0, 512, 512, 3), dtype=int)
     y = np.empty((0, 1), dtype=int)
 
-    for name in tqdm(os.listdir(path)):
+    for name in (os.listdir(path)):
+    #for name in tqdm(os.listdir(path)):
 
         if name[0:3]=='cat' and choose==1:
             continue;
@@ -48,7 +49,7 @@ def get_train_dogs_vs_cats(choose=2, number=-1, last=False):
         else:
             count+=1
 
-        if not last or count==number-1: 
+        if (not last) or count==number: 
             img_path = os.path.join(path, name)
             img = image.load_img(img_path, target_size=(512, 512))
             array = image.img_to_array(img)
@@ -69,7 +70,8 @@ def get_test_dogs_vs_cats(choose=2, number=-1):
     x = np.empty((0, 512, 512, 3), dtype=int)
     y = np.empty((0, 1), dtype=int)
 
-    for name in tqdm(os.listdir(path)):
+    for name in (os.listdir(path)):
+    #for name in tqdm(os.listdir(path)):
 
         if name[0:3]=='cat' and choose==1:
             continue;

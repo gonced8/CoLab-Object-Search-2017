@@ -8,7 +8,8 @@ def correct_sequence (features, saliency, n, size):
     seq = np.empty((0, n, size, features.shape[-1]), dtype=features.dtype)
     ind = np.empty((0, n, size), dtype=int)
 
-    for i in tqdm(range (features.shape[0])):
+    for i in (range (features.shape[0])):
+    #for i in tqdm(range (features.shape[0])):
 
         step = np.empty((0, features.shape[-1]), dtype=features.dtype)
         n_step = np.empty((0))
@@ -49,7 +50,8 @@ def split_sequence (seq, ind, y):
     new_ind = np.empty((0, count, ind.shape[2]), dtype=ind.dtype)
     new_y = np.empty((0, count), dtype=y.dtype)
 
-    for i in tqdm(range (seq.shape[0])):
+    for i in (range (seq.shape[0])):
+    #for i in tqdm(range (seq.shape[0])):
 
         seq_i = np.empty((0, seq.shape[2], seq.shape[3]), dtype=seq.dtype)
         ind_i = np.empty((0, ind.shape[2]), dtype=ind.dtype)
@@ -89,7 +91,8 @@ def wrong_sequence (seq, ind, features, y, n=0):
         new_seq = np.empty((0, n, seq.shape[2], seq.shape[3]), dtype=seq.dtype)
         new_ind = np.empty((0, n, ind.shape[2]), dtype=ind.dtype)
 
-    for i in tqdm(range (seq.shape[0])):
+    for i in (range (seq.shape[0])):
+    #for i in tqdm(range (seq.shape[0])):
 
         i_seq = np.empty((0, seq.shape[2], seq.shape[3]), dtype=seq.dtype)
         i_ind = np.empty((0, ind.shape[2]), dtype=ind.dtype)
@@ -211,15 +214,15 @@ def cartesian(arrays, out=None):
 def generate_sequence (x_features, x_saliency, step, correct, wrong):
 
     (x_sequence, x_sequence_index, y) = correct_sequence(x_features, x_saliency, correct, step) # gets "correct" correct sequences of size "step" for each image
-    print(x_sequence.shape, x_sequence_index.shape, y.shape)
+    #print(x_sequence.shape, x_sequence_index.shape, y.shape)
     # print(x_sequence_index, y)
 
     (x_sequence2, x_sequence_index2, y2) = wrong_sequence(x_sequence, x_sequence_index, x_features, y, wrong)   # gets "wrong" incorrect sequences for each image
-    print(x_sequence2.shape, x_sequence_index2.shape, y2.shape)
+    #print(x_sequence2.shape, x_sequence_index2.shape, y2.shape)
     # print(x_sequence_index2, y2)
 
     (x_sequence3, x_sequence_index3, y3) = split_sequence(x_sequence2, x_sequence_index2, y2)
-    print(x_sequence3.shape, x_sequence_index3.shape, y3.shape)
+    #print(x_sequence3.shape, x_sequence_index3.shape, y3.shape)
     # print(x_sequence_index3, y3)
 
     return (x_sequence3, x_sequence_index3, y3)
