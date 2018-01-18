@@ -84,8 +84,9 @@ for i in tqdm(range(x_test.shape[0])):
     seq = beam_search.search(calc_prob, 10, range(256), 5)
     x_test_sequence = np.append(x_test_sequence, [seq], axis=0)
     file.write("%s\n" % seq)
+    np.savez_compressed("npseq/seq"+str(i), seq=seq)
 
-    tqdm.write()
+    sys.stdout.flush()
 
 file.close()
 
