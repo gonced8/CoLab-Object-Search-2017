@@ -9,6 +9,7 @@ import data
 import rnn
 import saliency
 import sequence
+from plot_sequence import plot_sequence_on_image
 
 
 def calc_prob(seqs, size, empty):
@@ -90,6 +91,8 @@ for i in tqdm(range(x_test.shape[0])):
 
 file.close()
 
+# The input is the index of the image
+plot_sequence_on_image(7)
 
 #######################################################################################################################################################
 

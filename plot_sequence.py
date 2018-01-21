@@ -7,8 +7,9 @@ from matplotlib.colors import Normalize
 import numpy as np
 
 
-def plot_image():
-    image = np.load('out/outfile0.npz')['x_train'][0]
+def plot_image(image_number):
+    file_name = 'out/outfile' + str(image_number) + '.npz'
+    image = np.load(file_name)['x_train'][0]
     norm = Normalize()
     norm.autoscale(image)
     img_norm = norm(image)
@@ -16,11 +17,12 @@ def plot_image():
     pyplot.imshow(img_norm, origin='upper', extent=[0, 16, 0, 16])
 
 
-def plot_sequence():
-    b = np.load('sequence/seq0.npz')
-    seq = b['x_sequence_index'][0][9]
-    # seq = [1, 2, 255]
-    matrix = [[0 for n in range(16)] for m in range(16)]
+def plot_sequence(seq_number):
+    file_name = 'sequence/seq' + str(seq_number) + '.npz'
+    aux = np.load(file_name)
+    seq = aux['x_sequence_index'][0][9]
+
+    matrix = np.zeros((16, 16))
     for i in range(len(seq)):
         x = int(seq[i] % 16)
         y = int(seq[i] / 16)
@@ -28,9 +30,8 @@ def plot_sequence():
 
     # make a color map of colors
     cmap = colors.LinearSegmentedColormap.from_list('my_colormap',
-                                                ['white', 'red'],
-                                                256)
-
+                                                    ['white', 'red'],
+                                                    256)
 
     # tell imshow about color map so that only set colors are used
     img = pyplot.imshow(matrix, interpolation='nearest',
@@ -42,16 +43,11 @@ def plot_sequence():
     pyplot.colorbar(img, cmap=cmap)
 
 
-def plot_sequence_on_image():
-    plot_image()
-    plot_sequence()
+def plot_sequence_on_image(image_number):
+    plot_image(image_number)
+    plot_sequence(image_number)
     pyplot.show()
 
 
-plot_sequence_on_image()
-
-
-# transformar posicao da sequencia em posicao na imagem
-# atribuir valor de 0 a max a cada uma das posicoes por ordem
-# criar grid de tamanho 256 com tudo a zeros
-# fazer plot com escala de cores de a max
+if __name__ == '__main__':
+    plot_sequence_on_image(7)
