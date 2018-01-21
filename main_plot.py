@@ -3,54 +3,52 @@ import matplotlib
 matplotlib.use('TkAgg')
 from matplotlib import pyplot
 from matplotlib import colors
-import matplotlib.image as mpimg
-from keras.preprocessing import image
+from matplotlib.colors import Normalize
 import numpy as np
 
 
-def plotImage():
-    a = np.load('out/outfile0.npz')['x_train'][0]
-    x = image.array_to_img(a)
-    arrayForReal = image.img_to_array(a)
+def plot_image():
+    image = np.load('out/outfile0.npz')['x_train'][0]
+    norm = Normalize()
+    norm.autoscale(image)
+    img_norm = norm(image)
 
-    img = mpimg.imread("test.png")
-
-    pyplot.imshow(img, extent=[0,16, 0,16])
+    pyplot.imshow(img_norm, origin='upper', extent=[0, 16, 0, 16])
 
 
-seq = [20, 45, 100]
-matrix = [[0 for n in range(16)] for m in range(16)]
-for i in range(len(seq)):
-    x = seq[i] % 16
-    y = seq[i] // 16
-    print(x)
-    print(y)
-    print(i)
-    matrix[x][y] = i + 1
+def plot_sequence():
+    b = np.load('sequence/seq0.npz')
+    seq = b['x_sequence_index'][0][9]
+    # seq = [1, 2, 255]
+    matrix = [[0 for n in range(16)] for m in range(16)]
+    for i in range(len(seq)):
+        x = int(seq[i] % 16)
+        y = int(seq[i] / 16)
+        matrix[y][x] = i + 1
 
-# make a color map of colors
-cmap = colors.LinearSegmentedColormap.from_list('my_colormap',
+    # make a color map of colors
+    cmap = colors.LinearSegmentedColormap.from_list('my_colormap',
                                                 ['white', 'red'],
                                                 256)
 
 
-plotImage()
+    # tell imshow about color map so that only set colors are used
+    img = pyplot.imshow(matrix, interpolation='nearest',
+                        cmap=cmap,
+                        origin='upper',
+                        alpha=0.5,
+                        extent=[0, 16, 0, 16])
 
-# tell imshow about color map so that only set colors are used
-img = pyplot.imshow(matrix, interpolation='nearest',
-                    cmap=cmap,
-                    origin='lower',
-                    alpha=0.5,
-                    extent=[0, 16, 0, 16])
-
-pyplot.colorbar(img, cmap=cmap)
+    pyplot.colorbar(img, cmap=cmap)
 
 
+def plot_sequence_on_image():
+    plot_image()
+    plot_sequence()
+    pyplot.show()
 
-pyplot.show()
 
-# x.show()
-# img.show(x)
+plot_sequence_on_image()
 
 
 # transformar posicao da sequencia em posicao na imagem
