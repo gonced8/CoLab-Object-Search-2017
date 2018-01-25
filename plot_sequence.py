@@ -5,7 +5,8 @@ from matplotlib import pyplot
 from matplotlib import colors
 from matplotlib.colors import Normalize
 import numpy as np
-
+# extent=[0, 16, 0, 16]
+# extent=[0, 16, 0, 16]
 
 def plot_image(image_number):
     file_name = 'out/outfile' + str(image_number) + '.npz'
@@ -18,19 +19,22 @@ def plot_image(image_number):
 
 
 def plot_sequence(seq_number):
-    file_name = 'sequence/seq' + str(seq_number) + '.npz'
+    file_name = 'npseq/seq' + str(seq_number) + '.npz'
     aux = np.load(file_name)
-    seq = aux['x_sequence_index'][0][9]
+    seq = aux['seq']
 
     matrix = np.zeros((16, 16))
-    for i in range(len(seq)):
+    i=0
+    while i < len(seq) and not np.isinf(seq[i]):
+        print(seq[i])
         x = int(seq[i] % 16)
         y = int(seq[i] / 16)
         matrix[y][x] = i + 1
+        i = i + 1
 
     # make a color map of colors
     cmap = colors.LinearSegmentedColormap.from_list('my_colormap',
-                                                    ['white', 'red'],
+                                                    ['white', 'blue', 'red'],
                                                     256)
 
     # tell imshow about color map so that only set colors are used
@@ -49,5 +53,4 @@ def plot_sequence_on_image(image_number):
     pyplot.show()
 
 
-if __name__ == '__main__':
-    plot_sequence_on_image(7)
+
