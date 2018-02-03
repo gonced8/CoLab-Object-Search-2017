@@ -1,3 +1,10 @@
+'''
+Beam search function
+
+The function "search" generates the highest probability sequenece
+'''
+
+
 import numpy as np
 
 

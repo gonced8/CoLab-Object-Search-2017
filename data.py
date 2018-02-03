@@ -1,3 +1,7 @@
+'''
+Functions to get the training and testing data
+'''
+
 import numpy as np
 from keras.datasets import cifar10
 from keras.preprocessing import image
@@ -5,7 +9,7 @@ import os
 from tqdm import tqdm
 
 
-
+# This function returns the cifar10 data. This is obselete since was used only during the first tests
 def get_train_cifar10():
 
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
@@ -26,8 +30,8 @@ def get_train_cifar10():
     return (x, y)
 
 
-
-def get_train_dogs_vs_cats(choose=2, number=-1, last=False):
+# This functions returns the dogs vs cats training data. Use choose to select what type of images (0=cat, 1=dog, 2=both). You can select an image interval to get with start and end.
+def get_train_dogs_vs_cats(choose=2, start=0, end=-1):
 
     count=0
 
@@ -35,6 +39,9 @@ def get_train_dogs_vs_cats(choose=2, number=-1, last=False):
 
     x = np.empty((0, 512, 512, 3), dtype=int)
     y = np.empty((0, 1), dtype=int)
+
+    if end==-1:
+        end=len(list(os.listdir(path)))
 
     for name in (os.listdir(path)):
     #for name in tqdm(os.listdir(path)):
@@ -44,12 +51,7 @@ def get_train_dogs_vs_cats(choose=2, number=-1, last=False):
         if name[0:3]=='dog' and choose==0:
             continue
 
-        if count==number:
-            break
-        else:
-            count+=1
-
-        if (not last) or count==number: 
+        if count>=start and count<end: 
             img_path = os.path.join(path, name)
             img = image.load_img(img_path, target_size=(512, 512))
             array = image.img_to_array(img)
@@ -57,11 +59,16 @@ def get_train_dogs_vs_cats(choose=2, number=-1, last=False):
             x = np.append(x, [array], axis=0)
             y = np.append(y, [[int(name[0:3]=='dog')]], axis=0)
 
+        elif count>=end:
+            break
+
+        count+=1
+
     return (x, y)
 
 
-
-def get_test_dogs_vs_cats(choose=2, number=-1):
+# This function returns the dogs vs cats testing data. Use number to select the number of images you want to return
+def get_test_dogs_vs_cats(number=-1):
 
     count=0
 
@@ -73,11 +80,6 @@ def get_test_dogs_vs_cats(choose=2, number=-1):
     for name in (os.listdir(path)):
     #for name in tqdm(os.listdir(path)):
 
-        if name[0:3]=='cat' and choose==1:
-            continue;
-        if name[0:3]=='dog' and choose==0:
-            continue
-
         if count==number:
             break
         else:
@@ -86,9 +88,9 @@ def get_test_dogs_vs_cats(choose=2, number=-1):
         img_path = os.path.join(path, name)
         img = image.load_img(img_path, target_size=(512, 512))
         array = image.img_to_array(img)
-        array.shape
+
         x = np.append(x, [array], axis=0)
-        y = np.append(y, [[int(name[0:3]=='dog')]], axis=0)
+        #y = np.append(y, [[int(name[0:3]=='dog')]], axis=0)
 
 
     return (x, y)

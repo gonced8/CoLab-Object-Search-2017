@@ -13,10 +13,11 @@ def correct_sequence (features, saliency, n, size):
 
         step = np.empty((0, features.shape[-1]), dtype=features.dtype)
         n_step = np.empty((0))
+        sal=np.copy(saliency[i])
 
         for j in range (size*n):
-            pick = np.argmax(saliency[i])
-            saliency[i][int(pick/saliency.shape[1])][pick%saliency.shape[2]] = 0
+            pick = np.argmax(sal)
+            sal[int(pick/saliency.shape[1])][pick%saliency.shape[2]] = 0
             step = np.append(step, [features[i][int(pick/features.shape[1])][pick%features.shape[2]]], axis=0)
             n_step = np.append(n_step, pick)
 
@@ -59,16 +60,26 @@ def split_sequence (seq, ind, y):
 
         for j in range (seq.shape[1]):
 
-            step = np.zeros((seq.shape[2], seq.shape[3]), dtype=seq.dtype)
-            n_step = np.zeros((ind.shape[2]), dtype=ind.dtype)
+            step = seq[i][j]
+            n_step = ind[i][j]
+            #step = np.zeros((seq.shape[2], seq.shape[3]), dtype=seq.dtype)
+            #n_step = np.zeros((ind.shape[2]), dtype=ind.dtype)
 
             for k in range (seq.shape[2]):
 
-                step[k] = seq[i][j][k]
                 seq_i = np.append(seq_i, [step], axis=0)
+                step[0]=np.zeros(seq.shape[3], dtype=seq.dtype)
+                step=np.roll(step, -1)
 
-                n_step[k] = ind[i][j][k]
+                #step[k] = seq[i][j][k]
+                #seq_i = np.append(seq_i, [step], axis=0)
+
                 ind_i = np.append(ind_i, [n_step], axis=0)
+                n_step[0]=np.zeros(1, dtype=ind.dtype)
+                n_step=np.roll(n_step, -1)
+
+                #n_step[k] = ind[i][j][k]
+                #ind_i = np.append(ind_i, [n_step], axis=0)
 
                 y_i = np.append(y_i, [y[i][j]], axis=0)
 
@@ -80,7 +91,7 @@ def split_sequence (seq, ind, y):
 
 
 
-def wrong_sequence (seq, ind, features, y, n=0):
+def wrong_sequence_old (seq, ind, features, y, n=0):
 
     total = features.shape[1] * features.shape[2]
 
@@ -211,18 +222,68 @@ def cartesian(arrays, out=None):
 
 
 
+def wrong_sequence (features, saliency, n, size):
+
+    seq = np.empty((0, n, size, features.shape[-1]), dtype=features.dtype)
+    ind = np.empty((0, n, size), dtype=int)
+
+    for i in (range (features.shape[0])):
+    #for i in tqdm(range (features.shape[0])):
+
+        step = np.empty((0, features.shape[-1]), dtype=features.dtype)
+        n_step = np.empty((0))
+
+        sal=saliency[i]
+        high=np.max(saliency[i])
+
+        for j in range (size*n):
+            pick = np.argmin(sal)
+            sal[int(pick/saliency.shape[1])][pick%saliency.shape[2]] = high
+            step = np.append(step, [features[i][int(pick/features.shape[1])][pick%features.shape[2]]], axis=0)
+            n_step = np.append(n_step, pick)
+
+        step = np.flip(step, axis=0)
+        n_step = np.flip(n_step, axis=0)
+        
+        step_ordered = np.empty((0, features.shape[-1]), dtype=features.dtype)
+        n_step_ordered = np.empty((0))
+
+        for j in range (n):
+
+            for k in range (j, size*n, n):
+
+                step_ordered = np.append(step_ordered, [step[k]], axis=0)
+                n_step_ordered = np.append(n_step_ordered, [n_step[k]], axis=0)
+
+        seq = np.append(seq, [np.split(step_ordered, n)], axis=0)
+        ind = np.append(ind, [np.split(n_step_ordered, n)], axis=0)
+
+    y=np.zeros((seq.shape[0], seq.shape[1]))
+
+    return (seq, ind, y)
+
+
+
+
 def generate_sequence (x_features, x_saliency, step, correct, wrong):
 
     (x_sequence, x_sequence_index, y) = correct_sequence(x_features, x_saliency, correct, step) # gets "correct" correct sequences of size "step" for each image
     #print(x_sequence.shape, x_sequence_index.shape, y.shape)
     # print(x_sequence_index, y)
 
-    (x_sequence2, x_sequence_index2, y2) = wrong_sequence(x_sequence, x_sequence_index, x_features, y, wrong)   # gets "wrong" incorrect sequences for each image
+    #(x_sequence2, x_sequence_index2, y2) = wrong_sequence_old(x_sequence, x_sequence_index, x_features, y, wrong)   # gets "wrong" incorrect sequences for each image
+    (x_sequence2, x_sequence_index2, y2) = wrong_sequence(x_features, x_saliency, wrong, step)   # gets "wrong" incorrect sequences for each image
     #print(x_sequence2.shape, x_sequence_index2.shape, y2.shape)
     # print(x_sequence_index2, y2)
 
-    (x_sequence3, x_sequence_index3, y3) = split_sequence(x_sequence2, x_sequence_index2, y2)
+    x_sequence3 = np.append(x_sequence, x_sequence2, axis=1)
+    x_sequence_index3 = np.append(x_sequence_index, x_sequence_index2, axis=1)
+    y3 = np.append(y, y2, axis=1)
     #print(x_sequence3.shape, x_sequence_index3.shape, y3.shape)
     # print(x_sequence_index3, y3)
 
-    return (x_sequence3, x_sequence_index3, y3)
+    (x_sequence4, x_sequence_index4, y4) = split_sequence(x_sequence3, x_sequence_index3, y3)
+    #print(x_sequence4.shape, x_sequence_index4.shape, y4.shape)
+    # print(x_sequence_index4, y4)
+
+    return (x_sequence4, x_sequence_index4, y4)

@@ -20,11 +20,11 @@ def create(seq_size):
 
 def fit(model_rnn, x, y):
 
-    model_rnn.fit(x, y, epochs=20, batch_size=64)
+    model_rnn.fit(x, y, epochs=20, batch_size=100)
 
-    filepath = 'weights.h5'
+    filepath = 'model.h5'
 
-    model_rnn.save_weights(filepath)
+    model_rnn.save(filepath)
 
 
     #filepath="weights-improvement.h5"

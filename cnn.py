@@ -1,3 +1,8 @@
+'''
+This function receives an array of name x and returns its features
+'''
+
+
 from keras.applications.vgg16 import VGG16
 from keras.applications.vgg16 import preprocess_input
 import skimage.transform
@@ -10,6 +15,7 @@ def get_features (x):
 
     # model.summary()
 
+    # Resizing of the image to 512x512 so that the cnn, after the pooling, returns 512 features
     if x.shape[1]!=512 or x.shape[2]!=512:
         x_resized = np.zeros((x.shape[0], 512, 512, x.shape[3]))
 
@@ -21,6 +27,7 @@ def get_features (x):
 
     x_pp = preprocess_input(x)
 
+    # Features extraction
     features = model.predict(x_pp)
 
     return (x, x_pp, features)  # return preprocessed input data and return output

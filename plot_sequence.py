@@ -19,8 +19,10 @@ def plot_image(image_number):
 
 
 def plot_sequence(seq_number):
-    file_name = 'npseq/seq' + str(seq_number) + '.npz'
+    #file_name = 'sequence/seq' + str(seq_number) + '.npz'
+    file_name = 'npseq2/seq' + str(seq_number) + '.npz'
     aux = np.load(file_name)
+    #seq = aux['x_sequence_index'][0, 0, ...]
     seq = aux['seq']
 
     matrix = np.zeros((16, 16))
@@ -34,7 +36,7 @@ def plot_sequence(seq_number):
 
     # make a color map of colors
     cmap = colors.LinearSegmentedColormap.from_list('my_colormap',
-                                                    ['white', 'blue', 'red'],
+                                                    ['white', 'yellow', 'red', 'green', 'blue'],
                                                     256)
 
     # tell imshow about color map so that only set colors are used
