@@ -127,11 +127,11 @@ sys.exit()
 model_rnn = keras.models.load_model('model.h5')
 
 # Uses the test images to test
-#(x_test, _) = data.get_test_dogs_vs_cats(0, 10)
-#(_, _, x_test_features) = cnn.get_features(x_test)
+(x_test, _) = data.get_test_dogs_vs_cats(10)
 
 # Uses the train images to test
-(x_test, _) = data.get_train_dogs_vs_cats(0, 0, 10)
+#(x_test, _) = data.get_train_dogs_vs_cats(0, 0, 10)
+
 (_, _, x_test_features) = cnn.get_features(x_test)
 
 
@@ -141,7 +141,7 @@ for i in tqdm(range(x_test.shape[0])):
     x_test_features_reshaped = x_test_features[i].reshape(x_test_features.shape[1] * x_test_features.shape[2], x_test_features.shape[3])
     seq = beam_search.search(calc_prob, 10, range(256), 5)
     x_test_sequence = np.append(x_test_sequence, [seq], axis=0)
-    np.savez_compressed("npseq2/seq"+str(i), seq=seq)
+    np.savez_compressed("npseq/seq"+str(i), img=x_test[i], seq=seq)
 
     sys.stdout.flush()
 
@@ -151,7 +151,7 @@ sys.exit()
 
 # This function is used to plot the generated testing sequence
 # The input is the index of the image
-plot_sequence_on_image(3)
+plot_sequence_on_image(4)
 
 #######################################################################################################################################################
 

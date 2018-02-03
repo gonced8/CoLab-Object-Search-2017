@@ -9,8 +9,8 @@ import numpy as np
 # extent=[0, 16, 0, 16]
 
 def plot_image(image_number):
-    file_name = 'out/outfile' + str(image_number) + '.npz'
-    image = np.load(file_name)['x_train'][0]
+    file_name = 'npseq/seq' + str(image_number) + '.npz'
+    image = np.load(file_name)['img']
     norm = Normalize()
     norm.autoscale(image)
     img_norm = norm(image)
@@ -20,7 +20,7 @@ def plot_image(image_number):
 
 def plot_sequence(seq_number):
     #file_name = 'sequence/seq' + str(seq_number) + '.npz'
-    file_name = 'npseq2/seq' + str(seq_number) + '.npz'
+    file_name = 'npseq/seq' + str(seq_number) + '.npz'
     aux = np.load(file_name)
     #seq = aux['x_sequence_index'][0, 0, ...]
     seq = aux['seq']
