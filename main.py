@@ -18,7 +18,10 @@ from plot_sequence import plot_sequence_on_image
 
 # This function is used to calculate the probability of a sequence using the trained RNN
 def calc_prob(seqs, size, empty):
+    # Fill each sequence with the empty element until they have length equal to 'size'
     new_seqs = [np.pad(seq, (0, size - seq.size), 'constant', constant_values=empty) for seq in seqs]
+    
+    # Calculate the probabilities using the RNN
     new_feat_seqs = [ind_to_features(x_test_features_reshaped, seq, empty) for seq in new_seqs]
 
     probs = model_rnn.predict(np.array(new_feat_seqs))
