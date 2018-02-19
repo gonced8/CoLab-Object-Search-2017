@@ -5,7 +5,7 @@
 import keras
 import numpy as np
 import sys
-from tqdm import tqdm
+from tqdm import tqdm   # tqdm is used to show a progress bar during loops
 
 import beam_search
 import cnn
