@@ -1,3 +1,6 @@
+# RNN
+# This file has the functions to create and fit the RNN used in this project
+
 from keras import layers
 from keras import models
 import numpy as np
