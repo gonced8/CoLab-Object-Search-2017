@@ -1,29 +1,40 @@
+# sequence.py
+# This file has the functions to generate the correct and wrong sequences used during the RNN training.
+
 import numpy as np
 from tqdm import tqdm
 
-
-
 def correct_sequence (features, saliency, n, size):
 
+    # seq will be an array of sequence of features
+    # ind will be an array of sequences of indices of the corresponding regions of the features
+    
     seq = np.empty((0, n, size, features.shape[-1]), dtype=features.dtype)
     ind = np.empty((0, n, size), dtype=int)
 
     for i in (range (features.shape[0])):
     #for i in tqdm(range (features.shape[0])):
 
+        # step will be an array corresponding to the sequence of features
+        # nstep will be an array corresponding to the sequence of indices
         step = np.empty((0, features.shape[-1]), dtype=features.dtype)
         n_step = np.empty((0))
+        
+        # The saliency map is coppied so that any change doesn't affect afterwards
         sal=np.copy(saliency[i])
 
         for j in range (size*n):
-            pick = np.argmax(sal)
-            sal[int(pick/saliency.shape[1])][pick%saliency.shape[2]] = 0
+            pick = np.argmax(sal)   # The argument of the region with highest saliency is selected
+            sal[int(pick/saliency.shape[1])][pick%saliency.shape[2]] = 0    # The saliency of that region is zeroed
+            # The sequences are updated
             step = np.append(step, [features[i][int(pick/features.shape[1])][pick%features.shape[2]]], axis=0)
             n_step = np.append(n_step, pick)
 
+        # The sequences are flipped so that the saliency of the elements of the sequence is increasing
         step = np.flip(step, axis=0)
         n_step = np.flip(n_step, axis=0)
 
+        # Next, the sequences are splitted uniformly into n multiple sequences
         step_ordered = np.empty((0, features.shape[-1]), dtype=features.dtype)
         n_step_ordered = np.empty((0))
 
@@ -37,12 +48,14 @@ def correct_sequence (features, saliency, n, size):
         seq = np.append(seq, [np.split(step_ordered, n)], axis=0)
         ind = np.append(ind, [np.split(n_step_ordered, n)], axis=0)
 
+    # The output of this correct sequences is supposed to be 1
     y=np.ones((seq.shape[0], seq.shape[1]))
 
     return (seq, ind, y)
 
 
-
+# This function is used to split a sequence into multiple sequences of various sizes.
+# I.e: [1, 2, 3] -> [1, 0, 0]; [1, 2, 0]; [1, 2, 3]
 def split_sequence (seq, ind, y):
 
     count = seq.shape[1]*seq.shape[2]
@@ -90,7 +103,8 @@ def split_sequence (seq, ind, y):
     return (new_seq, new_ind, new_y)
 
 
-
+# This function generates wrong sequences using the regions not used in the correct sequences and randomly ordering them.
+# This does not generate the best results, so it isn't used.
 def wrong_sequence_old (seq, ind, features, y, n=0):
 
     total = features.shape[1] * features.shape[2]
@@ -221,7 +235,7 @@ def cartesian(arrays, out=None):
     return out
 
 
-
+# This function is similar to the correct_sequence function but instead of the highest saliency, it uses the lowest saliency
 def wrong_sequence (features, saliency, n, size):
 
     seq = np.empty((0, n, size, features.shape[-1]), dtype=features.dtype)
@@ -263,8 +277,7 @@ def wrong_sequence (features, saliency, n, size):
     return (seq, ind, y)
 
 
-
-
+# This function compiles and invokes all the needed functions to generate the correct and wrong sequences
 def generate_sequence (x_features, x_saliency, step, correct, wrong):
 
     (x_sequence, x_sequence_index, y) = correct_sequence(x_features, x_saliency, correct, step) # gets "correct" correct sequences of size "step" for each image
