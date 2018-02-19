@@ -34,9 +34,11 @@ def get_train_cifar10():
 def get_train_dogs_vs_cats(choose=2, start=0, end=-1):
 
     count=0
-
+    
+    # Path to the folder with the training data
     path = './data/dogs vs cats/train'
-
+    
+    # x will contain the images and y their classification (dog or cat)
     x = np.empty((0, 512, 512, 3), dtype=int)
     y = np.empty((0, 1), dtype=int)
 
@@ -71,11 +73,11 @@ def get_train_dogs_vs_cats(choose=2, start=0, end=-1):
 def get_test_dogs_vs_cats(number=-1):
 
     count=0
-
+    
+    # Path to the folder with the training data
     path = './data/dogs vs cats/test'
 
     x = np.empty((0, 512, 512, 3), dtype=int)
-    y = np.empty((0, 1), dtype=int)
 
     for name in (os.listdir(path)):
     #for name in tqdm(os.listdir(path)):
@@ -90,7 +92,5 @@ def get_test_dogs_vs_cats(number=-1):
         array = image.img_to_array(img)
 
         x = np.append(x, [array], axis=0)
-        #y = np.append(y, [[int(name[0:3]=='dog')]], axis=0)
-
 
     return (x, y)
