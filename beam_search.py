@@ -7,12 +7,14 @@ The function "search" generates the highest probability sequenece
 
 import numpy as np
 
-
+#mem_size = beam search number of steps
 def search(calc_prob, seq_max_size, vocab, mem_size):
     empty = float('inf')
     vocab_with_empty = np.append(np.array(vocab), empty)
 
+    #sequence vector (empty init)
     seqs = np.array([[]])
+    #sequence probability vector (empty init)
     seqs_prob = np.array([[]])
 
     for current_size in range(1, seq_max_size + 1):

@@ -8,22 +8,37 @@ import numpy as np
 # extent=[0, 16, 0, 16]
 # extent=[0, 16, 0, 16]
 
-def plot_image(image_number):
-    file_name = 'npseq/seq' + str(image_number) + '.npz'
-    image = np.load(file_name)['img']
-    norm = Normalize()
-    norm.autoscale(image)
-    img_norm = norm(image)
+def plot_image(image_number, test):
 
-    pyplot.imshow(img_norm, origin='upper', extent=[0, 16, 0, 16])
+	if test:
+		file_name = 'npseq/seq' + str(image_number) + '.npz'
+		image = np.load(file_name)['img']
+	else:
+		file_name = 'outfile/out' + str(image_number) + '.npz'
+		image = np.load(file_name)['x_train']
+
+	norm = Normalize()
+	norm.autoscale(image)
+	img_norm = norm(image)
+	pyplot.imshow(img_norm, origin='upper', extent=[0, 16, 0, 16])
 
 
-def plot_sequence(seq_number):
-    #file_name = 'sequence/seq' + str(seq_number) + '.npz'
-    file_name = 'npseq/seq' + str(seq_number) + '.npz'
+def plot_sequence(seq_number, test):
+	
+    if test:
+      file_name = 'npseq/seq' + str(seq_number) + '.npz'
+    else:
+      #file_name = 'npseq2/seq' + str(seq_number) + '.npz'
+      file_name = 'sequence/seq' + str(seq_number) + '.npz'
+    	
     aux = np.load(file_name)
     #seq = aux['x_sequence_index'][0, 0, ...]
-    seq = aux['seq']
+    
+    if test:
+      seq = aux['seq']
+    else:
+      #seq = aux['seq']
+      seq = aux['x_sequence_index'][0, 0, :]
 
     matrix = np.zeros((16, 16))
     i=0
@@ -49,9 +64,10 @@ def plot_sequence(seq_number):
     pyplot.colorbar(img, cmap=cmap)
 
 
-def plot_sequence_on_image(image_number):
-    plot_image(image_number)
-    plot_sequence(image_number)
+
+def plot_sequence_on_image(image_number, test):
+    plot_image(image_number, test) 
+    plot_sequence(image_number, test)
     pyplot.show()
 
 
