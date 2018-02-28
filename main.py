@@ -5,7 +5,7 @@
 import keras
 import numpy as np
 import sys
-from tqdm import tqdm
+from tqdm import tqdm   # tqdm is used to show a progress bar during loops
 
 import beam_search
 import cnn
@@ -18,7 +18,10 @@ from plot_sequence import plot_sequence_on_image
 
 # This function is used to calculate the probability of a sequence using the trained RNN
 def calc_prob(seqs, size, empty):
+    # Fill each sequence with the empty element until they have length equal to 'size'
     new_seqs = [np.pad(seq, (0, size - seq.size), 'constant', constant_values=empty) for seq in seqs]
+    
+    # Calculate the probabilities using the RNN
     new_feat_seqs = [ind_to_features(x_test_features_reshaped, seq, empty) for seq in new_seqs]
 
     probs = model_rnn.predict(np.array(new_feat_seqs))
@@ -32,7 +35,9 @@ def ind_to_features(features, ind_seq, empty):
 
 
 
-# The interval of images to process
+# The interval of images to process, this is, acquire features, saliency and sequences for each image.
+# You should first save the features and saliency and only then generate the sequences (due to memory limitations)
+
 start=0
 end=12500
 
@@ -104,8 +109,10 @@ if train:
 	count=end-start
 	j=int(count/100)
 	print("Load")
+	# RNN training
+    # The correct and wrong sequences are fed into the RNN for training.
+    # Obtaining the shape of the input and output arrays of the RNN
 	for i in (range(count)):
-
 		if i%j==0:
 		    print('\n'+str(int(100.*i/count))+" of 100%")
 
@@ -148,12 +155,11 @@ if test:
 
 	x_test_sequence = np.empty((0, 10), dtype=int)
 
-	for i in tqdm(range(x_test.shape[0])):
-		x_test_features_reshaped = x_test_features[i].reshape(x_test_features.shape[1] * x_test_features.shape[2], x_test_features.shape[3])
-		seq = beam_search.search(calc_prob, 10, range(256), 5)
-		x_test_sequence = np.append(x_test_sequence, [seq], axis=0)
-		np.savez_compressed("npseq2/seq"+str(i), img=x_test[i], seq=seq)
-
+    for i in tqdm(range(x_test.shape[0])):
+        x_test_features_reshaped = x_test_features[i].reshape(x_test_features.shape[1] * x_test_features.shape[2], x_test_features.shape[3])
+        seq = beam_search.search(calc_prob, 10, range(256), 5)
+        x_test_sequence = np.append(x_test_sequence, [seq], axis=0)
+        np.savez_compressed("npseq/seq"+str(i), img=x_test[i], seq=seq) # The image and generated sequence are saved into the npseq folder
 		sys.stdout.flush()
 
 	sys.exit()

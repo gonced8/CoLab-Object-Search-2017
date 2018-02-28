@@ -16,13 +16,14 @@ from tqdm import tqdm
 
 def calculate_saliency(x):
 
+    # The VGG16 CNN is used to calculate the saliency of the image
     model = VGG16(weights='imagenet', include_top=True)
     # model.summary()
 
     # (x, _) = data.get_train_dogs_vs_cats(0, 5) # gets the train data (only cats) from dataset dogs vs cats
 
+    # To work, the VGG16 needs and input image of size 224x224, so the the image is reshaped if needed
     msize=224
-
     if x.shape[1]!=msize or x.shape[2]!=msize:
         x_resized = np.zeros((x.shape[0], msize, msize, x.shape[3]))
 
@@ -43,23 +44,14 @@ def calculate_saliency(x):
     # plt.imshow(x[idx]/255.)
     # plt.show(block=False)
 
-    #print('a')
-
     # Utility to search for layer index by name.
     # Alternatively we can specify this as -1 since it corresponds to the last layer.
     layer_idx = utils.find_layer_idx(model, 'predictions')
 
-    #print('b')
-
-    # Swap softmax with linear
+    # Swap softmax activation with linear
     model.layers[layer_idx].activation = activations.linear
     model = utils.apply_modifications(model)
 
-    #print('c')
-    #print(x_test.shape)
-    #x_test = np.swapaxes(x_test, 1, 2)
-    #x_test = np.swapaxes(x_test, 2, 3)
-    #print(x_test.shape)
     #x.shape
 
     x_pp = preprocess_input(x)
@@ -71,11 +63,10 @@ def calculate_saliency(x):
     for i in (range (x_pp.shape[0])):
     #for i in tqdm(range (x_pp.shape[0])):
 
+        # The saliency is obtained and appended to the sal array.
         sal = np.append(sal, [visualize_saliency(model, layer_idx, None, seed_input=x_pp[i], backprop_modifier='guided')[:, :, 2:3]], axis=0)   # only the last rgb channel contains information
 
     # sal.shape
-
-    #print('d')
 
     # Plot with 'jet' colormap to visualize as a heatmap.
     # plt.figure(2)
@@ -88,6 +79,9 @@ def calculate_saliency(x):
 
 def pooling (x, n):
 
+    # This function is used to pool the 224x224 saliency map into a 16x16 saliency map,
+    # because the sequence we wish to generate uses the initial image arranged into 16x16 regions
+    
     x.shape
     model = models.Sequential()
     model.add(layers.AveragePooling2D(pool_size=(int(x.shape[1]/n), int(x.shape[2]/n)), strides=int(x.shape[1]/n), input_shape=(x.shape[1], x.shape[2], x.shape[3])))

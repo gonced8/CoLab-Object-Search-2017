@@ -1,3 +1,5 @@
+# This function was previously used to test the use of PIL library to show images
+
 import skimage.transform
 from PIL import Image
 import numpy as np
